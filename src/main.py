@@ -3,7 +3,7 @@ import argparse
 from datetime import datetime, date
 from src.api_client import fetch_arrival_flights, fetch_departure_flights
 from src.data_processor import process_flights
-from src.file_manager import write_current_snapshot, write_changed_snapshot, append_changes
+from src.file_manager import write_current_snapshot
 
 logging.basicConfig(level=logging.INFO) #basic logging from different libraries
 
@@ -20,9 +20,12 @@ def run(target_date):
 
       
         write_current_snapshot(full_df, target_date)         #write full snapshot of current flight status
+
+        '''
         write_changed_snapshot(full_df, target_date)         #write filtered snapshot of changed flights
         append_changes(changes)               #write only newly changed flights
-  
+        '''
+        
         logging.info(f"Saved {len(full_df)} flights; {len(changes)} new delayed/cancelled flights.")
     except Exception as e:
         logging.error(f"Run failed: {e}")
