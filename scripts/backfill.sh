@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # =============================================================
-# BACKFILL SCRIPT - Runs src.main for every date in a range
+# BACKFILL SCRIPT - Runs src.main for every date in a range, manually run, not affected by scheduler 
 # =============================================================
 
 
@@ -12,8 +12,16 @@ cd /Users/fionaleong/cargo_flight_monitor || exit 1
 mkdir -p back_logs
 
 # ================= CONFIGURE YOUR DATE RANGE =================
-START_DATE=$(date -v-91d +%Y-%m-%d) # Change this to your earliest desired date
-END_DATE=$(date -v+2d +%Y-%m-%d) 
+
+#hardcode date
+START_DATE='2028-08-18'
+END_DATE='2028-08-20'
+#date range for backfill
+'''
+START_DATE=$(date -v-91d +%Y-%m-%d) #change this to your earliest desired date
+END_DATE=$(date -v+2d %Y-%m-%d) 
+'''
+
 # =============================================================
 # Convert dates to epoch seconds (macOS compatible)
 start_epoch=$(date -j -f "%Y-%m-%d" "$START_DATE" +%s)
@@ -52,7 +60,7 @@ while [[ $current_epoch -le $end_epoch ]]; do
         echo "$(date): Failed to process ${current_date} (Exit code: ${exit_code})" | tee -a "back_logs/backfill.log"
     fi
     
-    # Wait 1 second to be gentle on the API / database
+    #wait 1 second before next iteration 
     sleep 1
     
     # Move to the next day (86400 seconds = 24 hours)
@@ -60,5 +68,5 @@ while [[ $current_epoch -le $end_epoch ]]; do
 done
 
 echo "========================================" | tee -a "back_logs/backfill.log"
-echo "$(date): 🎉 Backfill completed!" | tee -a "back_logs/backfill.log"
+echo "$(date): Backfill completed!" | tee -a "back_logs/backfill.log"
 echo "========================================" | tee -a "back_logs/backfill.log"

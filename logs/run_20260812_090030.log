@@ -1,0 +1,5 @@
+========================================
+Run started at: Wed Aug 12 09:00:30 HKT 2026
+========================================
+INFO:root:Starting flight data extraction...
+ERROR:root:Run failed: HTTPSConnectionPool(host='hongkongairport.com', port=443): Max retries exceeded with url: /flightinfo-rest/rest/flights?span=1&date=2026-08-12&lang=en&cargo=true&arrival=false (Caused by NameResolutionError("HTTPSConnection(host='hongkongairport.com', port=443): Failed to resolve 'hongkongairport.com' ([Errno 8] nodename nor servname provided, or not known)"))

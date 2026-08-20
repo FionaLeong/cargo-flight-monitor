@@ -11,5 +11,4 @@ echo "========================================" >> "$LOG_FILE"    #save and crea
 echo "Run started at: $(date)" >> "$LOG_FILE"
 echo "========================================" >> "$LOG_FILE"          
 
-
 /Users/fionaleong/cargo_flight_monitor/.venv/bin/python -m src.main >> "$LOG_FILE" 2>&1

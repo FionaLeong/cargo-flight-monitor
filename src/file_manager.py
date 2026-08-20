@@ -3,6 +3,13 @@ import os
 import logging
 from src.config import CURRENT_FILE, CHANGED_FILE, NEWLY_CHANGED_FILE
 
+'''
+load_previous_snapshot() - read previous snapshot 
+write_current_snapshot() - write current snapshot to csv file
+write_changed_snapshot() - write all updated status (after comparing) snapshot to csv file
+append changes - write all newly changed status (after comparing) snapshot to csv file
+'''
+
 logging.basicConfig(level=logging.INFO)
 
 def load_previous_snapshot():       #this one to compare, any updated status
@@ -10,21 +17,21 @@ def load_previous_snapshot():       #this one to compare, any updated status
     Load previous snapshot, returning empty dict if file is missing, empty, or corrupt.
     """
     
-    # Check if the file is empty (0 bytes)
+    #Check if the file is empty
     if os.path.getsize(CURRENT_FILE) == 0:
         logging.warning(f"{CURRENT_FILE} exists but is empty. This is the first run of the data.")
         return {}
     
     try: 
         df = pd.read_csv(CURRENT_FILE)
-        # Ensure required columns exist
+        # Ensure required columns exist. safety check 
         if "flight_id" not in df.columns or "status" not in df.columns:
-            logging.warning(f"{CURRENT_FILE} is missing required columns. Treating as no previous data.")
+            logging.warning(f"{CURRENT_FILE} is missing required columns.")
             return {}
         # Convert to dict: flight_id -> status
         return dict(zip(df["flight_id"], df["status"]))
     except (pd.errors.EmptyDataError, pd.errors.ParserError) as e:
-        logging.warning(f"Failed to read {CURRENT_FILE}: {e}. Treating as no previous data.")
+        logging.warning(f"Failed to read {CURRENT_FILE}: {e}. No previous data due to firt run.")
         return {}
 
 def write_current_snapshot(flights_df, target_date):
@@ -33,6 +40,9 @@ def write_current_snapshot(flights_df, target_date):
         logging.warning("Skipping snapshot write: DataFrame is empty.")
         return
     flights_df.to_csv(f"past_data/current_flights_{target_date}.csv", index=False)
+    flights_df.to_csv(f"{CURRENT_FILE}", index=False)
+    
+    #console output 
     print("="*40)
     print("Current flights snapshot:")
     print("="*40)
@@ -49,6 +59,7 @@ def write_changed_snapshot(flights_df, target_date):
         logging.warning("Skipping changed snapshot write: DataFrame is empty.")
         return
     flights_df[flights_df["status"].str.lower().isin(["delayed", "cancelled"])].to_csv(f"past_data/changed_flights_{target_date}.csv", index=False)
+    flights_df[flights_df["status"].str.lower().isin(["delayed", "cancelled"])].to_csv(f"{CHANGED_FILE}", index=False)
     print("=" * 40)
     print("Delayed/cancelled flights snapshot :")
     print("=" * 40)
@@ -83,7 +94,6 @@ def append_changes(new_change_records):     #receive flights_id and status key-v
         df_new = df_new[df_new["status"].str.lower().isin(["delayed", "cancelled"])]
     '''
 
-
     # --- Overwrite the file directly ---
     try: 
         df_new.to_csv(NEWLY_CHANGED_FILE, index=False)
@@ -92,7 +102,7 @@ def append_changes(new_change_records):     #receive flights_id and status key-v
         return
 
     print("=" * 40)
-    print("Change of status:")
+    print("Newly fetch delayed/cancelled flight status:")
     print("=" * 40)
     with pd.option_context(
         'display.max_columns', None,       # Show all columns

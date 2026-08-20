@@ -1,6 +1,0 @@
-========================================
-Run started at: Sat Jul 25 20:40:00 HKT 2026
-========================================
-INFO:root:Starting flight data extraction...
-ERROR:root:Run failed: [Errno 2] No such file or directory: 'data/current_flights.csv'
-200

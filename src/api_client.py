@@ -7,7 +7,7 @@ def fetch_arrival_flights(target_date):
     Fetch flights from Hong Kong Airport API.
     """
 
-    API_BASE= f"https://hongkongairport.com/flightinfo-rest/rest/flights?span=1&date={target_date}&lang=en&cargo=true&arrival=true"
+    API_BASE= f"https://hongkongairport.com/flightinfo-rest/rest/flights?span=1&date={target_date}&lang=en&cargo=true&arrival=false"
 
 
     try:
