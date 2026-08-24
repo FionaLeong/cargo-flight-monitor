@@ -16,5 +16,3 @@ API_KEY = os.getenv("API_KEY")      #no API key
 CURRENT_FILE = os.getenv("CURRENT_FILE", "data/current_flights.csv")
 CHANGED_FILE = os.getenv("CHANGED_FILE", "data/changed_flights.csv")
 NEWLY_CHANGED_FILE =os.getenv("NEWLY_CHANGED_FILE", "data/newly_changed_flights.csv")
-
-

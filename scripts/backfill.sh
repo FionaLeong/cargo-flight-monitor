@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# =============================================================
-# BACKFILL SCRIPT - Runs src.main for every date in a range, manually run, not affected by scheduler 
-# =============================================================
-
-
 # Navigate to your project root
 cd /Users/fionaleong/cargo_flight_monitor || exit 1
 
@@ -13,14 +8,14 @@ mkdir -p back_logs
 
 # ================= CONFIGURE YOUR DATE RANGE =================
 
+'''
 #hardcode date
 START_DATE='2028-08-18'
 END_DATE='2028-08-20'
-#date range for backfill
 '''
+#date range for backfill
 START_DATE=$(date -v-91d +%Y-%m-%d) #change this to your earliest desired date
 END_DATE=$(date -v+2d %Y-%m-%d) 
-'''
 
 # =============================================================
 # Convert dates to epoch seconds (macOS compatible)
@@ -34,7 +29,12 @@ echo "$(date): Starting backfill from $START_DATE to $END_DATE" | tee -a "back_l
 echo "========================================" | tee -a "back_logs/backfill.log"
 
 # Python interpreter path
-PYTHON_CMD="/Users/fionaleong/cargo_flight_monitor/.venv/bin/python"
+PYTHON_CMD="/Users/fionaleong/cargo_flight_monitor/.venv_HKIA/bin/python"
+
+# cargo arrival flag
+
+CARGO_FLAG = "true"
+ARRIVAL_FLAG= "false"
 
 
 while [[ $current_epoch -le $end_epoch ]]; do
@@ -46,10 +46,8 @@ while [[ $current_epoch -le $end_epoch ]]; do
     
     echo "$(date): Running src.main for ${current_date}..." | tee -a "back_logs/backfill.log"
     
-    # =============================================================
-    # EXECUTE YOUR PYTHON SCRIPT WITH THE DATE
-    # =============================================================
-    $PYTHON_CMD -m src.main --date "$current_date" >> "$BACKLOG_FILE" 2>&1
+
+    $PYTHON_CMD -m src.main --date "$current_date" --cargo "$CARGO_FLAG" --arrival "$ARRIVAL_FLAG" >> "$BACKLOG_FILE" 2>&1
     
     # Capture the exit code (0 = success, anything else = failure)
     exit_code=$?

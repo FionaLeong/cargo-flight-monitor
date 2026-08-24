@@ -1,4 +1,13 @@
-flight_id,flight_no,airline,date,time,origin,status,status_code,flight_type,last_updated
+flight_id,flight_no,airline,date,time,destination,status,status_code,flight_type,last_updated
+ET 3785_2026-08-21,ET 3785,ETH,2026-08-21,00:00,"MCT, MAD",Cancelled,,departure,2026-08-21T11:34:12+08:00
+KJ 974_2026-08-21,KJ 974,AIH,2026-08-21,02:30,ICN,Cancelled,,departure,2026-08-21T11:34:12+08:00
+ET 3769_2026-08-21,ET 3769,ETH,2026-08-21,05:00,"EMA, IST",Cancelled,,departure,2026-08-21T11:34:12+08:00
+3S 723_2026-08-21,3S 723,BOX,2026-08-21,06:10,"DXB, LEJ",Cancelled,,departure,2026-08-21T11:34:12+08:00
+ET 3035_2026-08-21,ET 3035,ETH,2026-08-21,06:55,ADD,Cancelled,,departure,2026-08-21T11:34:12+08:00
+5Y 5528_2026-08-21,5Y 5528,GTI,2026-08-21,07:00,ICN,Cancelled,,departure,2026-08-21T11:34:12+08:00
+CC 3571_2026-08-21,CC 3571,ABD,2026-08-21,07:00,"CMB, JNB",Delayed,,departure,2026-08-21T11:34:12+08:00
+7L 247_2026-08-21,7L 247,AZG,2026-08-21,18:10,GYD,Cancelled,,departure,2026-08-21T11:34:12+08:00
+7L 572_2026-08-21,7L 572,AZG,2026-08-21,18:35,GYD,Cancelled,,departure,2026-08-21T11:34:12+08:00
 ET 3767_2026-08-24,ET 3767,ETH,2026-08-24,00:40,,Cancelled,,arrival,2026-08-24T11:51:52+08:00
 CK 264_2026-08-24,CK 264,CKK,2026-08-24,07:00,,Cancelled,,arrival,2026-08-24T11:51:52+08:00
 HQ 9987_2026-08-24,HQ 9987,ADZ,2026-08-24,08:25,,Cancelled,,arrival,2026-08-24T11:51:52+08:00

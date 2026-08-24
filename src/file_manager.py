@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import logging
+import csv
 from src.config import CURRENT_FILE, CHANGED_FILE, NEWLY_CHANGED_FILE
 
 '''
@@ -112,4 +113,17 @@ def append_changes(new_change_records):     #receive flights_id and status key-v
     ):
         print(df_new)
 
+def append_to_csv(new_data, csv_file="/Users/fionaleong/HKIA_flight_monitor/data/HKIA_merged.csv"):
+    """
+    Append new data to the CSV file.
+    """
+    try:
+        df_new = pd.DataFrame(new_data)
 
+        #if starting new file, then must write header 
+        if os.path.getsize(csv_file) == 0:
+            df_new.to_csv(csv_file, mode='a', header=True, index=False) #append and write the header
+        else:
+            df_new.to_csv(csv_file, mode='a', header=False, index=False) #append and dont write the header
+    except Exception as e:
+        logging.error(f"Failed to append to {csv_file}: {e}")

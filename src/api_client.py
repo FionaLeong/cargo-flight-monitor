@@ -2,12 +2,13 @@ import requests #python file for https request
 from datetime import datetime
 #from src.config import API_BASE_URL 
 
-def fetch_arrival_flights(target_date):
+def fetch_arrival_flights(target_date, carg):
     """
     Fetch flights from Hong Kong Airport API.
     """
 
     API_BASE= f"https://hongkongairport.com/flightinfo-rest/rest/flights?span=1&date={target_date}&lang=en&cargo=true&arrival=false"
+
 
 
     try:
@@ -16,6 +17,8 @@ def fetch_arrival_flights(target_date):
     except requests.HTTPError as e:
         print(f"Error fetching arrival flights: {e}")
         return []  # Return an empty list on error
+    
+
 
     data = response.json() #turn response into JSON object (key value pair) so that we can loop
     
@@ -40,8 +43,8 @@ def fetch_arrival_flights(target_date):
     return flights_arrival
 
 
+
 def fetch_departure_flights(target_date):
-    
 
     API_BASE= f"https://hongkongairport.com/flightinfo-rest/rest/flights?span=1&date={target_date}&lang=en&cargo=true&arrival=false"
 
@@ -59,7 +62,7 @@ def fetch_departure_flights(target_date):
     flights_departure = []
     for day_data in data:       #each record
         for entry in day_data.get("list", []):          #each entry in one record
-            for f in entry.get("flight", []):                   #list entry
+            for f in entry.get("flight", []):                   #list entry flight no and airline
                 flights_departure.append({
                     "flight_id": f"{f.get('no')}_{day_data.get('date')}",
                     "flight_no": f.get("no"),
@@ -74,6 +77,45 @@ def fetch_departure_flights(target_date):
             })
 
     return flights_departure
+
+
+def fetch_flights(target_date=datetime.now().strftime('%Y-%m-%d'), cargo='true', arrival='false'):
+
+    API_BASE= f"https://hongkongairport.com/flightinfo-rest/rest/flights"
+
+    try:
+        response = requests.get(API_BASE, params= {'span': '1', 'date': target_date, 'lang': 'en', 'cargo': cargo , 'arrival': arrival })
+        response.raise_for_status()  # This will raise an error if status is not 200
+    except requests.HTTPError as e:
+        print(f"Error fetching arrival flights: {e}")
+        return []  # Return an empty list on error
+
+    data = response.json() #turn response into JSON object (key value pair) so that we can loop
+    print(data[0])
+    
+    #Flatten the nested JSON and save into list of record
+    #can see the key of the dictionares through data[0].key
+    flights = []
+    for day_data in data: #each records
+        for entry in day_data.get("list", []): #entry in each record
+            for f in entry.get("flight", []):      #list in entry
+                flights.append({
+                    "flight_id": f"{f.get('no')}_{day_data.get('date')}",
+                    "flight_no": f.get("no"),
+                    "airline": f.get("airline"),
+                    "date": day_data.get("date"),
+                    "time": entry.get("time"),  
+                    **({"origin": ", ".join(entry.get("origin", [])) }if arrival else {"departure": ",".join(entry.get("departure", []))}),       #glue together all origin into one item
+                    "status": entry.get("status", ""),
+                    "status_code": entry.get("statusCode"),
+                    "flight_type": "arrival",   # since arrival is True for all
+                    "last_updated": day_data.get("lastUpdatedTime", "")
+            })
+    return flights
+
+fetch_flights()
+
+    
 
 #JSON file format for parsing both arrival and departure
 '''
