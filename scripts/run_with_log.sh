@@ -1,5 +1,5 @@
 
-cd /Users/fionaleong/cargo_flight_monitor || exit 1
+cd /Users/fionaleong/HKIA_flight_monitor || exit 1
 
 mkdir -p logs
 
@@ -12,6 +12,6 @@ echo "Run started at: $(date)" >> "$LOG_FILE"
 echo "========================================" >> "$LOG_FILE"          
 
 #run the python scipt using .venv_HKIA
-/Users/fionaleong/cargo_flight_monitor/.venv_HKIA/bin/python -m src.main >> "$LOG_FILE" 2>&1
+/Users/fionaleong/HKIA_flight_monitor/.venv_HKIA/bin/python -m src.main >> "$LOG_FILE" 2>&1
 
-#scheduler won't run the script....
+#scheduler won't run the script, fixed

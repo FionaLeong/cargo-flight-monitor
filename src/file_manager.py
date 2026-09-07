@@ -1,7 +1,6 @@
 import pandas as pd
 import os
 import logging
-import csv
 from src.config import CURRENT_FILE, CHANGED_FILE, NEWLY_CHANGED_FILE
 
 '''

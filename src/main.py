@@ -27,7 +27,8 @@ def run(target_date=date.today(), cargo= 'true', arrival='false'):
         write_current_snapshot(full_df, target_date)         #write full snapshot of current flight status
         write_changed_snapshot(full_df, target_date)         #write full snapshot of changed flights (delayed/cancelled)
         append_changes(changes)               #write only newly changed status flights, say new cancellation or delayed
-        append_to_csv(changes)                #append all changes to the merged csv
+        append_to_csv(full_df)                #append new records (not just delayed/cancelled) to the merged csv, only add when doing backfill or when running the data once for one date
+        #no duplication check 
 
         logging.info(f"Saved {len(full_df)} flights; {len(changes)} new delayed/cancelled flights.")
     except Exception as e:
@@ -49,5 +50,8 @@ if __name__ == "__main__":      #this shall be the main program
     else: 
         target_date = date.today()
 
+    cargo_flag = args.cargo 
+    arrival_flag = args.arrival
+
     # Now call your run() function with the date
-    run(target_date)
+    run(target_date, cargo_flag, arrival_flag)

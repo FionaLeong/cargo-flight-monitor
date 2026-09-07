@@ -27,10 +27,9 @@ echo "========================================" | tee -a "back_logs/backfill.log
 PYTHON_CMD="/Users/fionaleong/HKIA_flight_monitor/.venv_HKIA/bin/python"
 
 # cargo arrival flag (make sure no spacing)
-FLAG_COMBOS=(
-    "true true"
-    "true false"
-)
+
+CARGO_FLAG= 'true'
+ARRIVAL_FLAG= 'false'
 
 
 while [[ $current_epoch -le $end_epoch ]]; do
@@ -42,25 +41,25 @@ while [[ $current_epoch -le $end_epoch ]]; do
     current_date=$(date -j -f "%s" "$current_epoch" +%Y-%m-%d)
 
     # Inner loop over flag combinations
-    for combo in "${FLAG_COMBOS[@]}"; do
-        # Split the combo into cargo and arrival
-        CARGO_FLAG=$(echo "$combo" | cut -d' ' -f1)
-        ARRIVAL_FLAG=$(echo "$combo" | cut -d' ' -f2)
 
-        echo "$(date): Running src.main for ${current_date} with cargo=${CARGO_FLAG} arrival=${ARRIVAL_FLAG}" | tee -a "back_logs/backfill.log"
+    # Split the combo into cargo and arrival
+    CARGO_FLAG=$(echo "$combo" | cut -d' ' -f1)
+    ARRIVAL_FLAG=$(echo "$combo" | cut -d' ' -f2)
 
-        $PYTHON_CMD -m src.main --date "$current_date" --cargo "$CARGO_FLAG" --arrival "$ARRIVAL_FLAG" >> "$BACKLOG_FILE" 2>&1
+    echo "$(date): Running src.main for ${current_date} with cargo=${CARGO_FLAG} arrival=${ARRIVAL_FLAG}" | tee -a "back_logs/backfill.log"
 
-        exit_code=$?
-        if [ $exit_code -eq 0 ]; then
-            echo "$(date): Successfully processed ${current_date} (cargo=${CARGO_FLAG}, arrival=${ARRIVAL_FLAG})" | tee -a "back_logs/backfill.log"
-        else
-            echo "$(date): Failed to process ${current_date} (cargo=${CARGO_FLAG}, arrival=${ARRIVAL_FLAG}) (Exit code: ${exit_code})" | tee -a "back_logs/backfill.log"
-        fi
+    $PYTHON_CMD -m src.main --date "$current_date" --cargo "$CARGO_FLAG" --arrival "$ARRIVAL_FLAG" >> "$BACKLOG_FILE" 2>&1
 
-        # Brief pause between combos (optional)
-        sleep 1
-    done
+    exit_code=$?
+    if [ $exit_code -eq 0 ]; then
+        echo "$(date): Successfully processed ${current_date} (cargo=${CARGO_FLAG}, arrival=${ARRIVAL_FLAG})" | tee -a "back_logs/backfill.log"
+    else
+         echo "$(date): Failed to process ${current_date} (cargo=${CARGO_FLAG}, arrival=${ARRIVAL_FLAG}) (Exit code: ${exit_code})" | tee -a "back_logs/backfill.log"
+    fi
+
+    # Brief pause between combos (optional)
+    sleep 1
+
 
     # Move to the next day
     current_epoch=$((current_epoch + 86400))
