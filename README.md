@@ -1,42 +1,109 @@
-# Dynamic Pricing for flight information
----
-The below source code does an extraction of cargo flight information to determine whether there are any changes such in flight status, especially 'cancelled' and 'delayed'. Upon determining changes in flight status, cargo prices can be adjust accordingly for dynamic pricing purposes
+# HKIA Data & Dashboard
 
+A real-time flight monitoring and data pipeline tool that fetches flight information from the **Hong Kong International Airport (HKIA) API** and visualizes it using python's **Streamlit** framework.
 
-## folder cofiguration
-```tree
-cargo_flight_monitor
+## 📂 Project Structure
+
+```text
+HKIA_flight_monitor/
+.
 ├── __init__.py
+├── back_logs
 ├── data
 │   ├── changed_flights.csv
-│   └── current_flights.csv
+│   ├── current_flights.csv
+│   ├── HKIA_merged_cargo_2026-09-08.csv
+│   ├── HKIA_merged.csv
+│   ├── newly_changed_flights.csv
+│   └── online_ports.csv
+├── libraries.py
+├── logs
+├── past_data
 ├── README.md
 ├── requirements.txt
+├── scripts
+│   ├── backfill_cargo.sh
+│   ├── backfill.sh
+│   └── run_with_log.sh
 └── src
     ├── __init__.py
+    ├── __pycache__
+    │   ├── __init__.cpython-312.pyc
+    │   ├── __init__.cpython-314.pyc
+    │   ├── api_client.cpython-312.pyc
+    │   ├── api_client.cpython-314.pyc
+    │   ├── config.cpython-312.pyc
+    │   ├── config.cpython-314.pyc
+    │   ├── data_processor.cpython-312.pyc
+    │   ├── data_processor.cpython-314.pyc
+    │   ├── file_manager.cpython-312.pyc
+    │   ├── file_manager.cpython-314.pyc
+    │   ├── main.cpython-312.pyc
+    │   └── main.cpython-314.pyc
     ├── api_client.py
     ├── config.py
+    ├── csv_analysis.py
     ├── data_processor.py
     ├── file_manager.py
-    └── main.py
+    ├── main.py
+    └── visuals.py
 ```
 
-## 1. data
-data are selected on a daily basis
+## 🚀 Getting Started
 
-- **changed_flights.csv** track flight changes by detecting flight status that are cancelled or delayed
+### 1. Installation
+Clone the repository and install the required dependencies within your virtual environment:
+```bash
+pip install -r requirements.txt
+```
 
-- **current_flights.csv** track daily flights information
-## 2. src
+### 2. Running the Data Pipeline
+To execute the ETL process and fetch the latest data from the HKIA API, run:
+```bash
+python src/main.py
+```
 
-- **config.py**
+#### Command-Line Arguments
+You can customize the data extraction using optional CLI flags:
 
-    -load .env and get .env as a global variable to be used in src file
+* `--date`: Target a specific date in `YYYY-MM-DD` format (defaults to today).
+* `--cargo`: Filter for cargo flights (`true` or `false`).
+* `--arrival`: Filter for arrival flights (`true` or `false`).
 
-- **api_client.py**
+#### Examples
+Fetch flight data for a **specific historical date**:
+```bash
+python src/main.py --date 2026-09-01
+```
 
-    -send a get request to extract flight information, flatten in JSON format, then loop through to store the data
-    
-    -two functions: **fetch_arrival_flights** and **fetch_departure_flights**
+Fetch only **cargo arrival flights** for today:
+```bash
+python src/main.py --cargo true --arrival true
+```
 
-- **
+### 3. Running the Historical Backfill
+If you need to sync historical or future flight logs, use the provided `backfill.sh` automation script. 
+
+These automation script already covers arrival/departure data for CARGO only.
+
+Before running, open `scripts/backfill.sh` and modify the **START_DATE** and **END_DATE** range parameters to target your desired historical timeline:
+
+```bash
+
+START_DATE=\$(date -v-90d +%Y-%m-%d) 
+END_DATE=\$(date -v+2d +%Y-%m-%d)   
+```
+
+Once your dates are set, give the script execution permissions and run it from your terminal:
+```bash
+chmod +x scripts/backfill.sh
+
+./scripts/backfill.sh
+#can use the full path as well by copying the whole path
+```
+
+### 4. Launching the Streamlit Dashboard
+To spin up the web-based tracking dashboard for data visualization, run:
+```bash
+streamlit run src/visuals.py
+```

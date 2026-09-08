@@ -9,7 +9,7 @@ mkdir -p back_logs
 # ================= CONFIGURE YOUR DATE RANGE =================
 
 #date range for backfill, for all available dates
-START_DATE=$(date -v-1d +%Y-%m-%d) #change this to your earliest desired date
+START_DATE=$(date -v-90d +%Y-%m-%d) #change this to your earliest desired date
 END_DATE=$(date -v+2d +%Y-%m-%d) 
 
 # =============================================================
