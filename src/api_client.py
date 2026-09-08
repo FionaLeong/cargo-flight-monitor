@@ -19,6 +19,7 @@ def fetch_flights(target_date=datetime.now().strftime('%Y-%m-%d'), cargo='true',
     
     
     port_key = "origin" if arrival == "true" else "destination"
+    flight_type= 'arrival' if arrival == "true" else 'departure'
 
     #Flatten the nested JSON and save into list of record
     #can see the key of the dictionares through data[0].key
@@ -32,10 +33,10 @@ def fetch_flights(target_date=datetime.now().strftime('%Y-%m-%d'), cargo='true',
                     "airline": f.get("airline"),
                     "date": day_data.get("date"),
                     "time": entry.get("time"),  
-                    port_key: ",".join(entry.get(port_key, [])),       #dynamic based on the arrival or departure flag
+                    "port": ",".join(entry.get(port_key, [])),       #dynamic based on the arrival or departure flag
                     "status": entry.get("status", ""),
                     "status_code": entry.get("statusCode"),
-                    "flight_type": entry.get("flight_type"),   # since arrival is True for all
+                    "flight_type": flight_type,  
                     "last_updated": day_data.get("lastUpdatedTime", "")
             })
     return flights
