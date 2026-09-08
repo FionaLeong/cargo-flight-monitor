@@ -58,7 +58,7 @@ pip install -r requirements.txt
 ```
 
 ### 2. Running the Data Pipeline
-To execute the ETL process and fetch the latest data from the HKIA API, run:
+To execute the ETL process and fetch the latest data from the HKIA API, run in root folder:
 ```bash
 python src/main.py
 ```
@@ -94,12 +94,14 @@ START_DATE=\$(date -v-90d +%Y-%m-%d)
 END_DATE=\$(date -v+2d +%Y-%m-%d)   
 ```
 
-Once your dates are set, give the script execution permissions and run it from your terminal:
+Once your dates are set, give the script execution permissions and run it from your terminal in root folder :
 ```bash
 chmod +x scripts/backfill.sh
+#or get fuull path
+chmod +x fullpath/backfill.sh
 
+#run the script by pasting the path in your terminal
 ./scripts/backfill.sh
-#can use the full path as well by copying the whole path
 ```
 
 ### 4. Launching the Streamlit Dashboard
