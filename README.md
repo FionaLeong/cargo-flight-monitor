@@ -27,19 +27,6 @@ HKIA_flight_monitor/
 │   └── run_with_log.sh
 └── src
     ├── __init__.py
-    ├── __pycache__
-    │   ├── __init__.cpython-312.pyc
-    │   ├── __init__.cpython-314.pyc
-    │   ├── api_client.cpython-312.pyc
-    │   ├── api_client.cpython-314.pyc
-    │   ├── config.cpython-312.pyc
-    │   ├── config.cpython-314.pyc
-    │   ├── data_processor.cpython-312.pyc
-    │   ├── data_processor.cpython-314.pyc
-    │   ├── file_manager.cpython-312.pyc
-    │   ├── file_manager.cpython-314.pyc
-    │   ├── main.cpython-312.pyc
-    │   └── main.cpython-314.pyc
     ├── api_client.py
     ├── config.py
     ├── csv_analysis.py
